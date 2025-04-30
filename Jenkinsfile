@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        jdk 'jdk11'          // Must be defined in Jenkins Global Tool Config
-        gradle 'gradle7'     // Same here; name must match Jenkins config
+        jdk 'jdk-17'          // Must be defined in Jenkins Global Tool Config
+        gradle 'Gradle'     // Same here; name must match Jenkins config
     }
 
     stages {
