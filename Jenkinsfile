@@ -2,15 +2,20 @@ pipeline {
     agent any
 
     tools {
-        jdk 'jdk-17'          // Must be defined in Jenkins Global Tool Config
-        gradle 'Gradle'     // Same here; name must match Jenkins config
+        jdk 'jdk-17'         // Ensure 'jdk-17' is configured in Jenkins > Global Tool Configuration
+        gradle 'Gradle'      // Ensure 'Gradle' is configured similarly
+    }
+
+    environment {
+        JAVA_HOME = "${tool 'jdk-17'}"
+        GRADLE_HOME = "${tool 'Gradle'}"
+        PATH = "${JAVA_HOME}/bin:${GRADLE_HOME}/bin:${env.PATH}"
     }
 
     stages {
         stage('Checkout') {
             steps {
-                 git branch: 'main', 
-                git 'https://github.com/your-username/your-repo-name.git'
+                git url: 'https://github.com/ShalabhRanjan19/MyMavenToGradle.git', branch: 'main'
             }
         }
 
@@ -30,6 +35,13 @@ pipeline {
             steps {
                 archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
             }
+        }
+    }
+
+    post {
+        always {
+            junit 'build/test-results/test/*.xml'
+            cleanWs()
         }
     }
 }
