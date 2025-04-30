@@ -3,7 +3,9 @@ pipeline {
 
     tools {
         jdk 'jdk-17'          // Must be defined in Jenkins Global Tool Config
-        gradle 'Gradle'     // Same here; name must match Jenkins config
+        gradle 'Gradle' 
+        mavem 'maven-3.9.0'
+        // Same here; name must match Jenkins config
     }
 
     stages {
@@ -15,13 +17,13 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh './gradlew clean build'
+                sh './gradle clean build'
             }
         }
 
         stage('Test') {
             steps {
-                sh './gradlew test'
+                sh './gradle test'
             }
         }
 
