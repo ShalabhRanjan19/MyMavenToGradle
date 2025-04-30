@@ -1,36 +1,46 @@
 pipeline {
-    agent any
+    agent any  // Use any available agent
 
     tools {
-        jdk 'jdk-17'          // Must be defined in Jenkins Global Tool Config
-        gradle 'Gradle' 
-        mavem 'maven-3.9.0'
-        // Same here; name must match Jenkins config
+        gradle 'Gradle'  // Ensure this matches the name configured in Jenkins
+        jdk 'jdk-17'
     }
-
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/ShalabhRanjan19/MyMavenToGradle.git'
+                git branch: 'main', url: 'https://github.com/ShalabhRanjan19/MyMavenToGradle.git'
             }
         }
 
         stage('Build') {
             steps {
-                sh './gradle clean build'
+                sh 'gradle build'  // Run Maven build
             }
         }
 
-        stage('Test') {
+       stage('Test') {
+           steps {
+               sh 'gradle test'  // Run unit tests
+           }
+        }
+
+              
+        stage('Run Application') {
             steps {
-                sh './gradle test'
+                // Start the JAR application
+                sh 'gradle run'
             }
         }
 
-        stage('Archive JAR') {
-            steps {
-                archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
-            }
+        
+    }
+
+    post {
+        success {
+            echo 'Build and deployment successful!'
+        }
+        failure {
+            echo 'Build failed!'
         }
     }
 }
