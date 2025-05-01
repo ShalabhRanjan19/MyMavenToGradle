@@ -21,27 +21,30 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh './gradlew clean build'
+                sh 'gradle clean build'
             }
         }
 
         stage('Test') {
             steps {
-                sh './gradlew test'
+                sh 'gradle test'
             }
         }
 
         stage('Archive JAR') {
             steps {
-                archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
+                sh 'java -jar build/libs/MyMavenToGradle-1.0-SNAPSHOT.jar'
+
             }
         }
     }
 
     post {
-        always {
-            junit 'build/test-results/test/*.xml'
-            cleanWs()
+        success {
+            echo 'Build and deployment successful!'
+        }
+        failure {
+            echo 'Build failed!'
         }
     }
 }
